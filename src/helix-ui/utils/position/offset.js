@@ -465,7 +465,6 @@ export const offsetFunctionMap = {
     'left': getLeft,
     'left-start': getLeftStart,
     'left-top': getLeftTop,
-    'center': getCenter,
 };
 
 export default {

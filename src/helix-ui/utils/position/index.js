@@ -254,11 +254,11 @@ function _getViewportCollisions (element, coords) {
 
     return {
         anywhere,
-        bottom, 
+        bottom,
         horizontally,
-        left, 
+        left,
         right,
-        top, 
+        top,
         vertically,
     };
 }
@@ -339,7 +339,7 @@ export function getPositionWithArrow (config) {
     _config.offset = 20;
 
     /*
-     * Remove offset if position is "top", "bottom", "left", or "right", 
+     * Remove offset if position is "top", "bottom", "left", or "right",
      * so that the point of the arrow always aligns to the center of
      * the reference element.
      */
