@@ -22,34 +22,6 @@ import Offset, { offsetFunctionMap } from './offset';
  */
 
 /**
- * @typedef {String} PositionString
- * @description
- * Valid values:
- *
- *   - `bottom-end`
- *   - `bottom-left`
- *   - `bottom-right`
- *   - `bottom-start`
- *   - `bottom`
- *   - `center`
- *   - `left-bottom`
- *   - `left-end`
- *   - `left-start`
- *   - `left-top`
- *   - `left`
- *   - `right-bottom`
- *   - `right-end`
- *   - `right-start`
- *   - `right-top`
- *   - `right`
- *   - `top-end`
- *   - `top-left`
- *   - `top-right`
- *   - `top-start`
- *   - `top`
- */
-
-/**
  * @typedef {Object} PositionRect
  * @description Calculated DOMRect-like object
  * @prop {Integer} bottom
@@ -236,12 +208,13 @@ function _getCoords (config) {
 /**
  * Determine if any side of an element is obscured by the viewport.
  *
- * @param {HTMLElement} element - the element to check against the viewport
+ * @param {PositionCOnfig} config - position configuration
  * @param {Object} coords - (x,y) coordinates
  *
  * @returns {ViewportCollisions}
  */
-function _getViewportCollisions (element, coords) {
+function _getViewportCollisions (config, coords) {
+    let { element } = config;
     let rect = _getRectAtCoords(element, coords);
 
     let bottom = rect.bottom > window.innerHeight;
@@ -267,12 +240,14 @@ function _getViewportCollisions (element, coords) {
  * Modify the position of an element so that it appears toward
  * the center of the viewport.
  *
- * @param {String} position - the current position
+ * @param {PositionConfig} config - position configuration
  * @param {ViewportCollisions} isOffscreen - offscreen metadata
  *
  * @returns {String} corrected position
  */
-function _repositionTowardCenter (position, isOffscreen) {
+function _repositionTowardCenter (config, isOffscreen) {
+    let { position } = config;
+
     if (isOffscreen.vertically) {
         position = VerticalOpposites[position];
     }
@@ -303,25 +278,27 @@ export function getPosition (config) {
         throw 'The "reference" configuration property must be defined.';
     }
 
-    // calculate initial coords
+    let { position } = _config;
     let coords = _getCoords(_config);
+    let isOffscreen = _getViewportCollisions(_config, coords);
 
-    let isOffscreen = _getViewportCollisions(_config.element, coords);
     if (isOffscreen.anywhere) {
-        // reposition toward center
-        _config.position = _repositionTowardCenter(config.position, isOffscreen);
+        let newConfig = Object.assign({}, _config);
+
+        newConfig.position = _repositionTowardCenter(newConfig, isOffscreen);
+
         // recalculate coords
-        let newCoords = _getCoords(_config);
+        let newCoords = _getCoords(newConfig);
 
         // double check collisions
-        isOffscreen = _getViewportCollisions(_config.element, coords);
+        isOffscreen = _getViewportCollisions(newConfig, newCoords);
         if (!isOffscreen.anywhere) {
             coords = newCoords;
+            position = newConfig.position;
         }
     }
 
     let { x, y } = coords;
-    let { position } = _config;
 
     return { position, x, y };
 }

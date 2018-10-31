@@ -28,8 +28,12 @@ hx-popover {
     overflow: hidden;
     padding: 0 1.25rem;
 
-    &:only-child {
-      padding: 1.25rem;
+    &:first-child {
+      padding-top: 1.25rem;
+    }
+
+    &:last-child {
+      padding-bottom: 1.25rem;
     }
   }
 
@@ -52,10 +56,13 @@ hx-popover {
   }
 
   > hx-div {
-    &:extend(hx-popover > hx-div);
+    &:extend(hx-popover > hx-div all);
 
-    &:only-child {
-      &:extend(hx-popover > hx-div:only-child);
+    &:first-child {
+      &:extend(hx-popover > hx-div:first-child);
+    }
+    &:last-child {
+      &:extend(hx-popover > hx-div:last-child);
     }
   }
 
@@ -71,7 +78,7 @@ hx-popover {
   }
 
   & > &-body {
-    &:extend(hx-popover > hx-div);
+    &:extend(hx-popover > hx-div all);
     overflow-y: auto;
   }
 
