@@ -1,7 +1,7 @@
 //import { HXPositionedElement } from './HXPositionedElement';
 import { HXElement } from './HXElement';
 
-import Positionable from '../utils/Positionable';
+import { makePositionable } from '../mixins/Positionable';
 import { KEYS } from '../utils';
 
 import shadowMarkup from './HXTooltipElement.html';
@@ -22,11 +22,12 @@ const DELAY = 500;
 /**
  * Defines behavior for the `<hx-tooltip>` element.
  *
- * @extends HXPositionedElement
+ * @extends HXElement
+ * @mixes module:mixins/Positionable~Positionable
  * @hideconstructor
  * @since 0.2.0
  */
-export class HXTooltipElement extends Positionable(HXElement) {
+export class HXTooltipElement extends makePositionable(HXElement) {
     static get is () {
         return 'hx-tooltip';
     }

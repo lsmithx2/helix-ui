@@ -1,7 +1,7 @@
 //import { HXPositionedElement } from './HXPositionedElement';
 import { HXElement } from './HXElement';
 
-import Positionable from '../utils/Positionable';
+import { makePositionable } from '../mixins/Positionable';
 
 import shadowMarkup from './HXPopoverElement.html';
 import shadowStyles from './HXPopoverElement.less';
@@ -11,10 +11,10 @@ import shadowStyles from './HXPopoverElement.less';
  *
  * @hideconstructor
  * @extends HXElement
- * @extends Positionable
+ * @mixes module:mixins/Positionable~Positionable
  * @since 0.2.0
  */
-export class HXPopoverElement extends Positionable(HXElement) {
+export class HXPopoverElement extends makePositionable(HXElement) {
     static get is () {
         return 'hx-popover';
     }
