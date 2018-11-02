@@ -7,7 +7,7 @@ import Offset, { offsetFunctionMap } from './offset';
  * @typedef {Object} PositionConfig
  * @prop {Element} element - element to position
  * @prop {Element} reference - reference element used to calculate position of the offset element
- * @prop {PositionString} [position=center] - position of offsetElement in relation to referenceElement
+ * @prop {String} [position=center] - position of offsetElement in relation to referenceElement
  * @prop {Integer} [margin=0] - distance in pixels between offset element and reference element
  * @prop {Integer} [offset=0] - offset in pixels towards the center axis
  */
@@ -16,18 +16,9 @@ import Offset, { offsetFunctionMap } from './offset';
  * @typedef {Object} Position
  * @description
  * Position metadata used to update visual state of a positioned element.
- * @prop {PositionString} position - calculated position based on collision detection logic
+ * @prop {String} position - calculated position based on collision detection logic
  * @prop {Integer} x - x coordinate in relation to the viewport
  * @prop {Integer} y - y coordinate in relation to the viewport
- */
-
-/**
- * @typedef {Object} PositionRect
- * @description Calculated DOMRect-like object
- * @prop {Integer} bottom
- * @prop {Integer} left
- * @prop {Integer} right
- * @prop {Integer} top
  */
 
 /**
@@ -45,26 +36,13 @@ import Offset, { offsetFunctionMap } from './offset';
  * @prop {Boolean} vertical - true if top or bottom edge is outside of viewport
  */
 
-/**
- * Default position configuration
- */
-export const DEFAULT_CONFIG = {
+const DEFAULT_CONFIG = {
     margin: 0,
     offset: 0,
     position: 'center',
 };
 
-/**
- * @name VerticalOpposites
- * @type {Object}
- * @description Position value map of vertical opposites.
- *
- * - `top` &rarr; `bottom`
- * - `right-start` &rarr; `right-end`
- * - `left-bottom` &rarr; `left-top`
- * - etc.
- */
-export const VerticalOpposites = {
+const VerticalOpposites = {
     'top': 'bottom',
     'top-right': 'bottom-right',
     'top-left': 'bottom-left',
@@ -87,17 +65,7 @@ export const VerticalOpposites = {
     'left-end': 'left-start',
 };
 
-/**
- * @name HorizontalOpposites
- * @type {Object}
- * @description Position value map of horizontal opposites.
- *
- * - `left` &rarr; `right`
- * - `top-left` &rarr; `top-right`
- * - `bottom-start` &rarr; `bottom-end`
- * - etc.
- */
-export const HorizontalOpposites = {
+const HorizontalOpposites = {
     'top': 'top',
     'top-right': 'top-left',
     'top-left': 'top-right',
@@ -127,7 +95,8 @@ export const HorizontalOpposites = {
  * @param {HTMLElement} element
  * @param {Coordinate} coord - { x, y } coordinate
  *
- * @returns {PositionRect}
+ * @returns {Object} Calculated, DOMRect-like object
+ * with `bottom`, `left`, `right`, and `top` properties.
  */
 function _getRectAtCoords (element, coord) {
     let { x, y } = coord;

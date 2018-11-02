@@ -1,8 +1,8 @@
 //import { HXPositionedElement } from './HXPositionedElement';
 import { HXElement } from './HXElement';
 
-import { makePositionable } from '../mixins/Positionable';
-import { KEYS } from '../utils';
+import { Positionable } from '../mixins/Positionable';
+import { KEYS, mix } from '../utils';
 
 import shadowMarkup from './HXTooltipElement.html';
 import shadowStyles from './HXTooltipElement.less';
@@ -23,11 +23,11 @@ const DELAY = 500;
  * Defines behavior for the `<hx-tooltip>` element.
  *
  * @extends HXElement
- * @mixes module:mixins/Positionable~Positionable
+ * @extends Positionable
  * @hideconstructor
  * @since 0.2.0
  */
-export class HXTooltipElement extends makePositionable(HXElement) {
+export class HXTooltipElement extends mix(HXElement).with(Positionable) {
     static get is () {
         return 'hx-tooltip';
     }
@@ -43,12 +43,12 @@ export class HXTooltipElement extends makePositionable(HXElement) {
         this._onCtrlMouseLeave = this._onCtrlMouseLeave.bind(this);
         this._onCtrlMouseEnter = this._onCtrlMouseEnter.bind(this);
         this._onKeyUp = this._onKeyUp.bind(this);
-        this.id = this.id || `tip-${this.$generateId()}`; // TODO: What if id is blank ('' or ' ')?
+        //this.id = this.id || `tip-${this.$generateId()}`; // TODO: What if id is blank ('' or ' ')?
 
         // configure instance
         this.DEFAULT_POSITION = 'top';
-        this._hasArrow = true;
-        this.setAttribute('role', 'tooltip');
+        //this.setAttribute('role', 'tooltip'); // TODO
+        this.$defaultAttribute('data-offset', 20);
     }
 
     $onConnect () {
@@ -70,11 +70,11 @@ export class HXTooltipElement extends makePositionable(HXElement) {
             case 'for':
                 this._attrForChange(oldVal, newVal);
                 break;
-        }
-    }
 
-    $afterReposition (data) {
-        this._elRoot.setAttribute('position', data.position);
+            case 'position':
+                this._elRoot.setAttribute('position', newVal);
+                break;
+        }
     }
 
     /**
@@ -84,9 +84,11 @@ export class HXTooltipElement extends makePositionable(HXElement) {
      * @returns {HTMLElement|Null}
      */
     get controlElement () { // TODO: is memoization necessary?
+        /*
         if (this._controlElement) {
             return this._controlElement;
         }
+        */
 
         return this.getRootNode().getElementById(this.for);
     }
@@ -132,7 +134,7 @@ export class HXTooltipElement extends makePositionable(HXElement) {
         delete this._controlElement;
         this._controlElement = this.controlElement;
 
-        this._makeControlAccessible();
+        //this._makeControlAccessible();
 
         // attach listeners to new control element
         this._attachListeners();
@@ -221,7 +223,7 @@ export class HXTooltipElement extends makePositionable(HXElement) {
             return;
         }
 
-        ctrl.setAttribute('aria-describedby', this.id);
+        //ctrl.setAttribute('aria-describedby', this.id);
 
         if (ctrl.tabIndex !== 0) {
             ctrl.tabIndex = 0;

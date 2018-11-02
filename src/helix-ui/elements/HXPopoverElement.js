@@ -1,20 +1,22 @@
 //import { HXPositionedElement } from './HXPositionedElement';
 import { HXElement } from './HXElement';
-
-import { makePositionable } from '../mixins/Positionable';
-
 import shadowMarkup from './HXPopoverElement.html';
 import shadowStyles from './HXPopoverElement.less';
+
+import { mix } from '../utils';
+import { Positionable } from '../mixins/Positionable';
+
+class _ProtoClass extends mix(HXElement).with(Positionable) {}
 
 /**
  * Defines behavior for the `<hx-popover>` element.
  *
  * @hideconstructor
  * @extends HXElement
- * @mixes module:mixins/Positionable~Positionable
+ * @extends Positionable
  * @since 0.2.0
  */
-export class HXPopoverElement extends makePositionable(HXElement) {
+export class HXPopoverElement extends _ProtoClass {
     static get is () {
         return 'hx-popover';
     }
@@ -26,14 +28,15 @@ export class HXPopoverElement extends makePositionable(HXElement) {
     $onCreate () {
         super.$onCreate();
         this.DEFAULT_POSITION = 'bottom-right';
-        this._hasArrow = true;
+        this.$defaultAttribute('data-offset', 20);
     }
 
-    get currentPosition () {
-        return this._elRoot.getAttribute('position') || this.DEFAULT_POSITION;
-    }
-    set currentPosition (value) {
-        this._elRoot.setAttribute('position', value);
+    $onAttributeChange (attr, oldVal, newVal) {
+        super.$onAttributeChange(attr, oldVal, newVal);
+
+        if (attr === 'position') {
+            this._elRoot.setAttribute('position', newVal);
+        }
     }
 
     /** @private */

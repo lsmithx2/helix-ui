@@ -86,3 +86,18 @@ export default {
     Position,
     onScroll,
 };
+
+export function mix (superclass) {
+    class MixinBuilder {
+        constructor (superclass) {
+            this.superclass = superclass;
+        }
+
+        with (...mixins) {
+            return mixins.reduce((c, mixin) => mixin(c), superclass);
+        }
+    }
+
+    return new MixinBuilder();
+}
+
